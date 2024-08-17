@@ -128,8 +128,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust-vite-cli"
-version = "0.1.0"
+name = "rust-cli"
+version = "1.0.0"
 dependencies = [
  "clap",
 ]
