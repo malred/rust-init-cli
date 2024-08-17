@@ -11,6 +11,7 @@ pub fn read_line() -> String {
 }
 
 use std::{io, fs};
+use std::env::current_dir;
 use std::path::{Path};
 
 // 复制文件夹到指定路径
@@ -111,7 +112,7 @@ impl UserSelected {
     }
     // 创建文件
     fn init(&self) {
-        let mut path = "src/public/".to_string();
+        let mut path = "./src/public/".to_string();
 
         match self.framework_type {
             FrameworkType::React => {
@@ -133,11 +134,25 @@ impl UserSelected {
             }
         }
 
-        // println!("{:?}", &path);
+        // 获取当前目录的路径
+        let current_dir1 = env!("CARGO_MANIFEST_DIR");
+        // let current_dir2 = env!("CARGO_HOME");
+        // // let current_dir3 = env!("CARGO_BUILD_TARGET_DIR");
+        // // let current_dir4 = env!("CARGO_TARGET_DIR");
+        // println!("当前目录 env {:?}", current_dir1);
+        // println!("当前目录 home {:?}", current_dir2);
+        // println!("当前目录 path os {:?}", Path::new(".").parent().unwrap());
+        // // println!("当前目录 target {:?}", current_dir3);
+        // // println!("当前目录 target {:?}", current_dir4); not defined at compile time
+        // println!("当前目录 {:?}", current_dir().unwrap().display());
+        // println!("开始复制 {:?}", &path);
+        // // println!("开始复制 {:?}", &(current_dir1.to_string() + "/" + &path));
+
+        // todo: 从网络上下载 或 调用cmd git clone
 
         copy_dir_all(
             // src,
-            Path::new(&path),
+            Path::new(&(current_dir1.to_string() + "/" + &path)),
             Path::new(&self.project_name),
         ).unwrap();
     }
