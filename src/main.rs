@@ -11,7 +11,7 @@ pub fn read_line() -> String {
 }
 
 use std::{io, fs};
-use std::env::current_dir;
+use std::env::{current_dir, current_exe};
 use std::path::{Path};
 
 // 复制文件夹到指定路径
@@ -19,7 +19,7 @@ fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> 
     // fs::create_dir_all(&dst)?;
     fs::create_dir_all(&dst).expect("创建dst目录失败");
 
-    println!("遍历");
+    // println!("遍历");
     fs::read_dir(&src).expect("找不到src目录");
     for entry in fs::read_dir(src)? {
         let entry = entry?;
@@ -112,7 +112,8 @@ impl UserSelected {
     }
     // 创建文件
     fn init(&self) {
-        let mut path = "./src/public/".to_string();
+        // let mut path = "./src/public/".to_string();
+        let mut path = "public/".to_string();
 
         match self.framework_type {
             FrameworkType::React => {
@@ -136,6 +137,8 @@ impl UserSelected {
 
         // 获取当前目录的路径
         let current_dir1 = env!("CARGO_MANIFEST_DIR");
+        let current_exe = current_exe().unwrap();
+        println!("current exe {:?}", current_exe);
         // let current_dir2 = env!("CARGO_HOME");
         // // let current_dir3 = env!("CARGO_BUILD_TARGET_DIR");
         // // let current_dir4 = env!("CARGO_TARGET_DIR");
@@ -148,11 +151,19 @@ impl UserSelected {
         // println!("开始复制 {:?}", &path);
         // // println!("开始复制 {:?}", &(current_dir1.to_string() + "/" + &path));
 
+        println!("复制 {}",
+                 &(current_exe.display().to_string().replace("rust-vite-cli.exe", "")
+                     + "/" + &path));
+
         // todo: 从网络上下载 或 调用cmd git clone
 
         copy_dir_all(
             // src,
-            Path::new(&(current_dir1.to_string() + "/" + &path)),
+            // Path::new(&(current_dir1.to_string() + "/" + &path)),
+            Path::new(
+                &(current_exe.display().to_string().replace("rust-vite-cli.exe", "")
+                    + "/" + &path)
+            ),
             Path::new(&self.project_name),
         ).unwrap();
     }
