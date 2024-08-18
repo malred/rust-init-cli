@@ -61,9 +61,10 @@ Would you like to customize the default import alias (@/*)? >> No(default)/Yes
 复制 C:\Users\13695\Desktop\middlestart\rust-vite-cli\/public/nextjs/ts-lint-tailwind-app
 ```
 
-创建nest项目 (v1.2.0)
+创建nest项目 (v1.2.1)
+
 ```shell
-rust-cli create-nest
+> rust-cli create-nest
 What is your project named? >> project-name
 
 复制: G:\code-g\rust-vite-cli\target\debug\public/nest/
@@ -80,6 +81,41 @@ yes
 start git init ...
 cd G:\code-g\rust-vite-cli\project-name && git init
 Initialized empty Git repository in G:/code-g/rust-vite-cli/project-name/.git/
+done.
+```
+
+创建nuxt项目 (v1.3.0)
+
+```shell
+> rust-cli create-nuxt
+What is your project named? >> nuxt-app
+
+复制: G:\code-g\rust-vite-cli\target\debug\public/nuxt/
+Initialize git repository? No(default)/Yes
+
+which package manager would you like to use >> npm(default)/pnpm/yarn
+pnpm 
+start install ...
+cd G:\code-g\rust-vite-cli\nuxt-app && pnpm install
+
+... 
+
+> nuxt-app@ postinstall G:\code-g\rust-vite-cli\nuxt-app
+> nuxt prepare
+
+ℹ Compiled plugins/server.mjs in 750.6ms                                                                                                            13:11:52
+ℹ Compiled types/plugins.d.ts in 790.4ms                                                                                                            13:11:52   
+ℹ Compiled plugins/client.mjs in 795.6ms                                                                                                            13:11:52   
+✔ Types generated in .nuxt                                                                                                                          13:11:54
+
+dependencies:
++ nuxt 3.12.4
++ vue 3.4.38
+
+Done in 1m 4.1s
+start git init ...
+cd F:\codes\frontend\nuxt\nuxtapp && git init
+Initialized empty Git repository in F:/codes/frontend/nuxt/nuxtapp/.git/
 done.
 ```
 

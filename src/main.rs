@@ -2,10 +2,12 @@ mod vite;
 mod common;
 mod nextjs;
 mod nest;
+mod nuxt;
 
 use clap::{Parser, Subcommand};
 use crate::nest::create_nest_project;
 use crate::nextjs::create_next_project;
+use crate::nuxt::create_nuxt_project;
 use crate::vite::create_vite_project;
 
 #[derive(Parser)]
@@ -24,6 +26,8 @@ enum Commands {
     CreateNext,
     /// create-nest
     CreateNest,
+    /// create-nuxt
+    CreateNuxt,
 }
 
 fn main() {
@@ -38,6 +42,9 @@ fn main() {
         }
         Some(Commands::CreateNest) => {
             create_nest_project()
+        }
+        Some(Commands::CreateNuxt) => {
+            create_nuxt_project()
         }
         None => {
             println!("Run with --help to see instructions.")
