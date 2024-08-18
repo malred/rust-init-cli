@@ -3,8 +3,10 @@ mod common;
 mod nextjs;
 mod nest;
 mod nuxt;
+mod astro;
 
 use clap::{Parser, Subcommand};
+use crate::astro::create_astro_project;
 use crate::nest::create_nest_project;
 use crate::nextjs::create_next_project;
 use crate::nuxt::create_nuxt_project;
@@ -28,6 +30,8 @@ enum Commands {
     CreateNest,
     /// create-nuxt
     CreateNuxt,
+    /// create-astro
+    CreateAstro,
 }
 
 fn main() {
@@ -45,6 +49,9 @@ fn main() {
         }
         Some(Commands::CreateNuxt) => {
             create_nuxt_project()
+        }
+        Some(Commands::CreateAstro) => {
+            create_astro_project()
         }
         None => {
             println!("Run with --help to see instructions.")
