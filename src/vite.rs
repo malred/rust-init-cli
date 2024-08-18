@@ -1,4 +1,3 @@
-use std::env::current_exe;
 use std::path::Path;
 use crate::common::{copy_dir_all, current_exe_pkg, install, read_line};
 

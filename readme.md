@@ -19,7 +19,9 @@ git clone https://gitee.com/malguy/rust-vite-cli.git
 
 ## 3. 在命令行中运行
 
-创建vite项目
+- 2024-8-18
+
+创建vite项目 (v0.1.0 / v1.0.0)
 
 ```shell
 > rust-cli create-vite
@@ -37,7 +39,7 @@ javascript(js)
 复制 C:\Users\13695\Desktop\middlestart\rust-vite-cli\/public/vite/react-ts
 ```
 
-创建next项目
+创建next项目 (v1.1.0)
 
 ```shell
 > rust-cli create-next
@@ -59,6 +61,29 @@ Would you like to customize the default import alias (@/*)? >> No(default)/Yes
 复制 C:\Users\13695\Desktop\middlestart\rust-vite-cli\/public/nextjs/ts-lint-tailwind-app
 ```
 
+创建nest项目 (v1.2.0)
+```shell
+rust-cli create-nest
+What is your project named? >> project-name
+
+复制: G:\code-g\rust-vite-cli\target\debug\public/nest/
+which package manager would you like to use >> npm(default)/pnpm/yarn
+pnpm
+
+start install ...
+cd G:\code-g\rust-vite-cli\project-name && pnpm install
+
+...
+
+Initialize git repository? No(default)/Yes
+yes
+start git init ...
+cd G:\code-g\rust-vite-cli\project-name && git init
+Initialized empty Git repository in G:/code-g/rust-vite-cli/project-name/.git/
+done.
+```
+
 # 更新日志
 
-- 支持创建项目后自动安装
+- v1.1.0 支持创建项目后自动安装
+- v1.2.0 支持创建git仓库(init)

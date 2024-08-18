@@ -1,5 +1,4 @@
 use std::path::Path;
-use std::thread::spawn;
 use crate::common::{copy_dir_all, current_exe_pkg, install, read_line};
 
 #[derive(Debug)]

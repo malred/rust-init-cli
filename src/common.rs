@@ -33,7 +33,7 @@ pub fn read_line() -> String {
     input.trim().to_string()
 }
 
-// 执行命令行操作
+// 执行npm install操作
 pub fn install(project_name: &str) {
     println!("which package manager would you like to use >> npm(default)/pnpm/yarn");
     let mut npm_type = read_line();
@@ -44,6 +44,7 @@ pub fn install(project_name: &str) {
     println!("start install ...");
 
     if cfg!(target_os = "windows") {
+        // 获取当前目录
         let mut out = Command::new("cmd").arg("/c")
             .arg(
                 "chdir"
@@ -55,6 +56,7 @@ pub fn install(project_name: &str) {
         // println!("chdir {:?}", chdir.clone() + "\\" + project_name);
         // println!("chdir os {:?}", " G:\\code-g\\rust-vite-cli\\my-app");
 
+        // 进入当前目录 && install
         let mut out = Command::new("cmd").arg("/c")
             .arg(
                 // "cd ".to_string() + &chdir + project_name + " && " +
@@ -75,6 +77,62 @@ pub fn install(project_name: &str) {
         let status = out.wait().expect("failed to wait for child");
 
         // println!("child exited with: {}", status);
+        if status.success() {
+            println!("done.");
+        }
+    } else {
+        println!("暂不支持mac os");
+    }
+}
+
+// 执行git init操作
+pub fn git_init(project_name: &str) {
+    println!("Initialize git repository? No(default)/Yes");
+    let mut use_git_init = read_line();
+    let mut use_git_init = use_git_init.to_lowercase();
+    let use_git_init = match use_git_init.as_str() {
+        "yes" => {
+            true
+        }
+        "no" => {
+            false
+        }
+        _ => {
+            true
+        }
+    };
+
+    if !use_git_init {
+        return;
+    }
+
+    println!("start git init ...");
+
+    if cfg!(target_os = "windows") {
+        let mut out = Command::new("cmd").arg("/c")
+            .arg(
+                "chdir"
+            )
+            .output().expect("cmd exec error!");
+
+        let strs = String::from_utf8_lossy(&out.stdout);
+        let chdir = strs.replace("\r\n", "");
+
+        let mut out = Command::new("cmd").arg("/c")
+            .arg(
+                "cd ".to_string() + chdir.as_str() + "\\" + project_name +
+                    " && " + "git init"
+            )
+            .spawn().expect("cmd exec error!");
+        // .output().expect("cmd exec error!");
+
+        println!("{}",
+                 "cd ".to_string() + &chdir + "\\" + project_name +
+                     " && " + "git init"
+        );
+
+        let status = out.wait().expect("failed to wait for child");
+
         if status.success() {
             println!("done.");
         }
