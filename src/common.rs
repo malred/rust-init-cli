@@ -85,8 +85,7 @@ pub fn install(project_name: &str) {
     }
 }
 
-// 执行git init操作
-pub fn git_init(project_name: &str) {
+pub fn ask_git_init() -> bool {
     println!("Initialize git repository? No(default)/Yes");
     let mut use_git_init = read_line();
     let mut use_git_init = use_git_init.to_lowercase();
@@ -101,11 +100,11 @@ pub fn git_init(project_name: &str) {
             false
         }
     };
+    use_git_init
+}
 
-    if !use_git_init {
-        return;
-    }
-
+// 执行git init操作
+pub fn git_init(project_name: &str) {
     println!("start git init ...");
 
     if cfg!(target_os = "windows") {

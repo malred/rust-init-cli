@@ -1,5 +1,5 @@
 use std::path::Path;
-use crate::common::{copy_dir_all, current_exe_pkg, git_init, install, read_line};
+use crate::common::{ask_git_init, copy_dir_all, current_exe_pkg, git_init, install, read_line};
 
 #[derive(Debug)]
 struct UserSelectedNestApp {
@@ -45,7 +45,10 @@ pub fn create_nest_project() {
 
     user_select.init();
 
+    // 因为npm install可能卡住, 用户如果按回车可能直接选择了默认选项
+    let git = ask_git_init();
+
     install(&user_select.project_name);
 
-    git_init(&user_select.project_name);
+    if git { git_init(&user_select.project_name); }
 }
