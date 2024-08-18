@@ -98,7 +98,7 @@ pub fn git_init(project_name: &str) {
             false
         }
         _ => {
-            true
+            false
         }
     };
 
