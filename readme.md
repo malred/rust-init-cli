@@ -18,6 +18,7 @@ git clone https://gitee.com/malguy/rust-vite-cli.git
 ![img.png](doc/img.png)
 
 ## 3. 在命令行中运行
+
 创建vite项目
 
 ```shell
@@ -57,3 +58,7 @@ Would you like to customize the default import alias (@/*)? >> No(default)/Yes
 
 复制 C:\Users\13695\Desktop\middlestart\rust-vite-cli\/public/nextjs/ts-lint-tailwind-app
 ```
+
+# 更新日志
+
+- 支持创建项目后自动安装

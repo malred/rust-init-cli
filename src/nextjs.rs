@@ -1,6 +1,6 @@
-use std::env::current_exe;
 use std::path::Path;
-use crate::common::{copy_dir_all, read_line};
+use std::thread::spawn;
+use crate::common::{copy_dir_all, current_exe_pkg, install, read_line};
 
 #[derive(Debug)]
 struct UserSelectedNextApp {
@@ -72,23 +72,11 @@ impl UserSelectedNextApp {
             path += "alias";
         }
 
-        let pkg_name = env!("CARGO_PKG_NAME");
-        // println!("{pkg_name}.exe");
-        let pkg_name = pkg_name.to_string() + ".exe";
-
-        // 获取当前目录的路径
-        let current_exe = current_exe().unwrap();
-        // println!("current exe {:?}", current_exe);
-        println!("复制 {}",
-                 &(current_exe.display().to_string().replace(&pkg_name, "")
-                     + "/" + &path));
+        println!("复制: {}", current_exe_pkg() + &path);
 
         copy_dir_all(
             Path::new(
-                &(current_exe.display().to_string().replace(
-                    &pkg_name,
-                    "")
-                    + "/" + &path)
+                &(current_exe_pkg() + &path)
             ),
             Path::new(&self.project_name),
         ).unwrap();
@@ -175,5 +163,10 @@ pub fn create_next_project() {
     );
     // println!("{user_select:?}");
 
-    user_select.init()
+    user_select.init();
+
+    // spawn(move ||
+    // install(&user_select.project_name, &npm_type)
+    // ).join().unwrap();
+    install(&user_select.project_name);
 }

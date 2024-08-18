@@ -1,6 +1,6 @@
 use std::env::current_exe;
 use std::path::Path;
-use crate::common::{copy_dir_all, read_line};
+use crate::common::{copy_dir_all, current_exe_pkg, install, read_line};
 
 #[derive(Debug)]
 enum FrameworkType {
@@ -94,28 +94,7 @@ impl UserSelected {
             }
         }
 
-        // 获取当前目录的路径
-        // let current_dir1 = env!("CARGO_MANIFEST_DIR");
-        let current_exe = current_exe().unwrap();
-        // println!("current exe {:?}", current_exe);
-        // let current_dir2 = env!("CARGO_HOME");
-        // // let current_dir3 = env!("CARGO_BUILD_TARGET_DIR");
-        // // let current_dir4 = env!("CARGO_TARGET_DIR");
-        // println!("当前目录 env {:?}", current_dir1);
-        // println!("当前目录 home {:?}", current_dir2);
-        // println!("当前目录 path os {:?}", Path::new(".").parent().unwrap());
-        // // println!("当前目录 target {:?}", current_dir3);
-        // // println!("当前目录 target {:?}", current_dir4); not defined at compile time
-        // println!("当前目录 {:?}", current_dir().unwrap().display());
-        // println!("开始复制 {:?}", &path);
-        // // println!("开始复制 {:?}", &(current_dir1.to_string() + "/" + &path));
-        let pkg_name = env!("CARGO_PKG_NAME");
-        // println!("{pkg_name}.exe");
-        let pkg_name = pkg_name.to_string() + ".exe";
-
-        println!("复制 {}",
-                 &(current_exe.display().to_string().replace(&pkg_name, "")
-                     + "/" + &path));
+        println!("复制 {}", &(current_exe_pkg() + &path));
 
         // todo: 从网络上下载 或 调用cmd git clone
 
@@ -123,10 +102,7 @@ impl UserSelected {
             // src,
             // Path::new(&(current_dir1.to_string() + "/" + &path)),
             Path::new(
-                &(current_exe.display().to_string().replace(
-                    &pkg_name,
-                    "")
-                    + "/" + &path)
+                &(current_exe_pkg() + &path)
             ),
             Path::new(&self.project_name),
         ).unwrap();
@@ -157,5 +133,7 @@ pub fn create_vite_project() {
     let user_select = UserSelected::new(&project_name, &framework, &variant);
     // println!("{user_select:?}");
 
-    user_select.init()
+    user_select.init();
+
+    install(&user_select.project_name);
 }
