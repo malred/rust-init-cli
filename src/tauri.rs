@@ -1,7 +1,7 @@
 use std::any::Any;
 use std::cmp::PartialEq;
 use std::path::Path;
-use crate::common::{ask_git_init, ask_install, copy_dir_all, current_exe_pkg, git_init, install, read_line};
+use crate::common::{ask_git_init, ask_install, copy_dir_all, current_exe_pkg, git_init, install, paint_bold, paint_option, paint_remind, paint_underline_white, paint_user_input, read_line};
 
 #[derive(Debug)]
 struct UserSelectedTauriApp {
@@ -97,74 +97,159 @@ enum UITmpl {
 
 pub fn create_tauri_project() {
     // project name
-    println!("Project name (tauri-app)");
+    // println!("Project name (tauri-app)");
+    paint_remind("Project name", "tauri-app");
     let project_name = read_line();
+    if project_name.is_empty() {
+        println!("{}", paint_user_input("tauri-app"))
+    } else { println!("{}", paint_user_input(&project_name)); }
 
     // identifier com.ts_js-vanilla-js.app
 
     // language
-    println!("Choose which language to use for your frontend › (input 1,2,3 to select)");
-    println!("\t1. TypeScript / JavaScript  (pnpm, yarn, npm, bun) - (default)");
-    println!("\t2. Rust");
-    println!("\t3. .NET");
+    // println!("Choose which language to use for your frontend › (input 1,2,3 to select)");
+    paint_remind("Choose which language to use for your frontend › ", "");
+    println!("\t1. {}", paint_underline_white("TypeScript / JavaScript  (pnpm, yarn, npm, bun)"));
+    println!("\t2. {}", paint_option("Rust"));
+    println!("\t3. {}", paint_option(".NET"));
     let language = read_line();
     let language = match language.to_lowercase().as_str() {
-        "1" => Language::TsJs,
-        "2" => Language::Rust,
-        "3" => Language::DotNET,
-        _ => Language::TsJs
+        "1" => {
+            println!("{}", paint_user_input("TypeScript / JavaScript  (pnpm, yarn, npm, bun)"));
+            Language::TsJs
+        }
+        "2" => {
+            println!("{}", paint_user_input("Rust"));
+            Language::Rust
+        }
+        "3" => {
+            println!("{}", paint_user_input(".NET"));
+            Language::DotNET
+        }
+        _ => {
+            println!("{}", paint_user_input("TypeScript / JavaScript  (pnpm, yarn, npm, bun)"));
+            Language::TsJs
+        }
     };
 
     let mut template = UITmpl::Vanilla;
     match language {
         Language::TsJs => {
             // UI template
-            println!("Choose your UI template › (input 1,2,3.. to select)");
-            println!("\t1. Vanilla - (default)");
-            println!("\t2. Vue");
-            println!("\t3. React");
-            println!("\t4. Angular");
+            // println!("Choose your UI template › (input 1,2,3.. to select)");
+            println!("{}", paint_bold("Choose your UI template › "));
+            println!("\t1. {}", paint_underline_white("Vanilla"));
+            println!("\t2. {}", paint_option("Vue"));
+            println!("\t3. {}", paint_option("React"));
+            println!("\t4. {}", paint_option("Angular"));
             let line = read_line();
             template = match line.to_lowercase().as_str() {
-                "1" => UITmpl::Vanilla,
-                "Vanilla" => UITmpl::Vanilla,
-                "vanilla" => UITmpl::Vanilla,
-                "2" => UITmpl::Vue,
-                "Vue" => UITmpl::Vue,
-                "vue" => UITmpl::Vue,
-                "3" => UITmpl::React,
-                "React" => UITmpl::React,
-                "react" => UITmpl::React,
-                "r" => UITmpl::React,
-                "4" => UITmpl::Angular,
-                "Angular" => UITmpl::Angular,
-                "angular" => UITmpl::Angular,
-                "a" => UITmpl::Angular,
-                _ => UITmpl::Vanilla
+                "1" => {
+                    println!("{}", paint_user_input("Vanilla"));
+                    UITmpl::Vanilla
+                }
+                "Vanilla" => {
+                    println!("{}", paint_user_input("Vanilla"));
+                    UITmpl::Vanilla
+                }
+                "vanilla" => {
+                    println!("{}", paint_user_input("Vanilla"));
+                    UITmpl::Vanilla
+                }
+                "2" => {
+                    println!("{}", paint_user_input("Vue"));
+                    UITmpl::Vue
+                }
+                "Vue" => {
+                    println!("{}", paint_user_input("Vue"));
+                    UITmpl::Vue
+                }
+                "vue" => {
+                    println!("{}", paint_user_input("Vue"));
+                    UITmpl::Vue
+                }
+                "3" => {
+                    println!("{}", paint_user_input("React"));
+                    UITmpl::React
+                }
+                "React" => {
+                    println!("{}", paint_user_input("React"));
+                    UITmpl::React
+                }
+                "react" => {
+                    println!("{}", paint_user_input("React"));
+                    UITmpl::React
+                }
+                "r" => {
+                    println!("{}", paint_user_input("React"));
+                    UITmpl::React
+                }
+                "4" => {
+                    println!("{}", paint_user_input("Angular"));
+                    UITmpl::Angular
+                }
+                "Angular" => {
+                    println!("{}", paint_user_input("Angular"));
+                    UITmpl::Angular
+                }
+                "angular" => {
+                    println!("{}", paint_user_input("Angular"));
+                    UITmpl::Angular
+                }
+                "a" => {
+                    println!("{}", paint_user_input("Angular"));
+                    UITmpl::Angular
+                }
+                _ => {
+                    println!("{}", paint_user_input("Vanilla"));
+                    UITmpl::Vanilla
+                }
             };
         }
         Language::Rust => {
             // UI template
-            println!("Choose your UI template › (input 1,2,3.. to select)");
+            // println!("Choose your UI template › (input 1,2,3.. to select)");
+            println!("{}", paint_bold("Choose your UI template › "));
             println!("\t1. Vanilla - (default)");
             println!("\t2. Yew");
             // println!("\t3. Leptos");
             // println!("\t4. Sycamore");
             let line = read_line();
             template = match line.to_lowercase().as_str() {
-                "1" => UITmpl::RustVanilla,
-                "Vanilla" => UITmpl::RustVanilla,
-                "vanilla" => UITmpl::RustVanilla,
-                "2" => UITmpl::Yew,
-                "Yew" => UITmpl::Yew,
-                "yew" => UITmpl::Yew,
-                _ => UITmpl::RustVanilla
+                "1" => {
+                    println!("{}", paint_user_input("Vanilla"));
+                    UITmpl::RustVanilla
+                }
+                "Vanilla" => {
+                    println!("{}", paint_user_input("Vanilla"));
+                    UITmpl::RustVanilla
+                }
+                "vanilla" => {
+                    println!("{}", paint_user_input("Vanilla"));
+                    UITmpl::RustVanilla
+                }
+                "2" => {
+                    println!("{}", paint_user_input("Yew"));
+                    UITmpl::Yew
+                }
+                "Yew" => {
+                    println!("{}", paint_user_input("Yew"));
+                    UITmpl::Yew
+                }
+                "yew" => {
+                    println!("{}", paint_user_input("Yew"));
+                    UITmpl::Yew
+                }
+                _ => {
+                    println!("{}", paint_user_input("Vanilla"));
+                    UITmpl::RustVanilla
+                }
             };
         }
         Language::DotNET => {
             // UI template
-            println!("Choose your UI template › (input 1,2,3.. to select)");
-            println!("\t1. Blazor");
+            println!("{}", paint_bold("Choose your UI template › "));
+            println!("\t1. {}", paint_option("Blazor"));
             let line = read_line();
             template = match line.to_lowercase().as_str() {
                 "1" => UITmpl::Blazor,
@@ -172,13 +257,15 @@ pub fn create_tauri_project() {
                 "blazor" => UITmpl::Blazor,
                 _ => UITmpl::Blazor
             };
+            println!("{}", paint_user_input("Blazor"));
         }
     }
 
     // ts
-    println!("Choose your UI flavor › ");
-    println!("\t1. TypeScript (default)");
-    println!("\t2. JavaScript");
+    // println!("Choose your UI flavor › ");
+    paint_remind("Choose your UI flavor › ", "");
+    println!("\t1. {}", paint_underline_white("TypeScript"));
+    println!("\t2. {}", paint_option("JavaScript"));
     let ts = read_line();
     let ts = match ts.to_lowercase().as_str() {
         "1" => true,
@@ -189,6 +276,9 @@ pub fn create_tauri_project() {
         "javascript" => false,
         _ => true
     };
+    if ts {
+        println!("{}", paint_user_input("TypeScript"));
+    } else { println!("{}", paint_user_input("JavaScript")); }
 
     // git
     let git = ask_git_init();
