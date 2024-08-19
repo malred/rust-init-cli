@@ -1,5 +1,5 @@
 use std::path::Path;
-use crate::common::{ask_git_init, ask_install, copy_dir_all, current_exe_pkg, git_init, install, read_line};
+use crate::common::{ask_git_init, ask_install, copy_dir_all, current_exe_pkg, git_init, install, paint_remind, paint_user_input, read_line};
 
 #[derive(Debug)]
 struct UserSelectedNestApp {
@@ -35,7 +35,12 @@ impl UserSelectedNestApp {
 
 pub fn create_nest_project() {
     // project name
-    println!("What is your project named? >> project-name");
+    // println!("What is your project named? >> project-name");
+    paint_remind("What is your project named? >>", "project-name");
+    let project_name = read_line();
+    if project_name.is_empty() {
+        println!("{}", paint_user_input("project-name"))
+    } else { println!("{}", paint_user_input(&project_name)); }
     let project_name = read_line();
 
     let user_select = UserSelectedNestApp::new(
