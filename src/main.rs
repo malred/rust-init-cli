@@ -8,6 +8,7 @@ mod tauri;
 
 use clap::{Parser, Subcommand};
 use crate::astro::create_astro_project;
+use crate::common::cmd;
 use crate::nest::create_nest_project;
 use crate::nextjs::create_next_project;
 use crate::nuxt::create_nuxt_project;
@@ -40,6 +41,11 @@ enum Commands {
 
 fn main() {
     let cli = Args::parse();
+
+    // 切换utf8，看是否可以修复彩色 - no work!
+    let _ = cmd("chcp 65001").unwrap();
+    // println!("{res:#?}");
+
     match cli.command {
         Some(Commands::CreateVite) => {
             // println!("List users here")

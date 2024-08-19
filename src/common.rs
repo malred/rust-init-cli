@@ -4,7 +4,11 @@ use std::io::Read;
 use std::path::Path;
 use std::process::Command;
 use ansi_term::{ANSIGenericString, Color, Style};
-use colored::{ColoredString, Colorize};
+use clap::builder::Str;
+use owo_colors::{FgColorDisplay, OwoColorize};
+use owo_colors::colors::White;
+use owo_colors::styles::{BoldDisplay, UnderlineDisplay};
+// use colored::{ColoredString, Colorize};
 
 // 复制文件夹到指定路径
 pub fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
@@ -239,10 +243,10 @@ pub fn current_exe_pkg() -> String {
 
 // ansi_term 美化控制台print
 
-pub fn paint_bold(str: &str) -> String {
-    Style::new().bold().paint(str).to_string()
-    // str.bold().to_string()
-}
+// pub fn paint_bold(str: &str) -> String {
+//     Style::new().bold().paint(str).to_string()
+//     // str.bold().to_string()
+// }
 
 pub fn paint_white(str: &str) -> String {
     // 这个white颜色实际上类似gray灰色
@@ -272,24 +276,40 @@ pub fn paint_option(str: &str) -> String {
     Color::Purple.underline().paint(str).to_string()
 }
 
-// pub fn paint_underline_white(str: &str) -> String {
-// Color::White.underline().paint(str).to_string()
 // pub fn paint_underline_white(str: &str) -> ANSIGenericString<str> {
 //     Color::White.underline().paint(str)
 // }
-
-pub fn paint_underline_white(str: &str) -> ColoredString {
-    str.underline().white()
-}
+// pub fn paint_underline_white(str: &str) -> String {
+//     Color::White.underline().paint(str).to_string()
+// }
 
 // 打印提示
-pub fn paint_remind_with_other(title: &str, before: &str, default: &str, after: &str) {
-    // println!("{} {}{}{}", paint_bold(title), before, paint_white(default), after);
-    println!("{} {}{}{}", paint_bold(title), before, paint_underline_white(default), after);
-}
+// pub fn paint_remind_with_other(title: &str, before: &str, default: &str, after: &str) {
+//     // println!("{} {}{}{}", paint_bold(title), before, paint_white(default), after);
+//     println!("{} {}{}{}", paint_bold(title), before, paint_underline_white(default), after);
+// }
 
 pub fn paint_remind(title: &str, default: &str) {
     println!("{} {}", paint_bold(title), paint_underline_white(default));
+}
+
+// colored
+// pub fn paint_underline_white(str: &str) -> ColoredString {
+//     str.underline().white()
+// }
+pub fn paint_underline_white(str: &str) -> String {
+    str.clone().underline().white().to_string()
+}
+
+pub fn paint_bold(str: &str) -> String {
+    // Style::new().bold().paint(str).to_string()
+    // str.bold().to_string()
+    str.clone().bold().to_string()
+}
+
+pub fn paint_remind_with_other(title: &str, before: &str, default: &str, after: &str) {
+    // println!("{} {}{}{}", paint_bold(title), before, paint_white(default), after);
+    println!("{} {}{}{}", paint_bold(title), before, paint_underline_white(default), after);
 }
 
 // match

@@ -1,4 +1,3 @@
-use std::any::Any;
 use std::cmp::PartialEq;
 use std::path::Path;
 use crate::common::{ask_git_init, ask_install, copy_dir_all, current_exe_pkg, git_init, install, paint_bold, paint_option, paint_remind, paint_underline_white, paint_user_input, read_line};
