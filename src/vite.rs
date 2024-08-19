@@ -1,5 +1,6 @@
 use std::path::Path;
-use crate::common::{ask_install, copy_dir_all, current_exe_pkg, install, read_line};
+use ansi_term::{Color, Style};
+use crate::common::{ask_git_init, ask_install, copy_dir_all, current_exe_pkg, git_init, install, paint_bold, paint_option, paint_remind, paint_user_input, paint_white, read_line};
 
 #[derive(Debug)]
 enum FrameworkType {
@@ -110,29 +111,58 @@ impl UserSelected {
 
 pub fn create_vite_project() {
     // project name
-    println!("your project name? (vite-project)");
+    // println!("{} {}", paint_bold("your project name?"), paint_white("vite-project"));
+    paint_remind("your project name?", "vite-project");
     let project_name = read_line();
+    let project_name = if project_name.is_empty() {
+        "vite-project"
+    } else { &project_name };
+    println!("{}", paint_user_input(&project_name));
 
     // select a framework
     // react vue ...
-    println!("select a framework: (default: react)");
-    println!("react");
-    println!("vue");
-    let framework = read_line();
-    let framework = framework.to_lowercase();
+    // println!("select a framework: (default: react)");
+    // println!("{} {}", paint_bold("select a framework:"), paint_white("(react)"));
+    paint_remind("select a framework:", "(react)");
+    // println!("react");
+    // println!("vue");
+    println!("{}",paint_option("react"));
+    println!("{}",paint_option("vue"));
+    let mut framework = read_line().to_lowercase();
+    framework = match framework.as_str() {
+        "r" => { "react".to_string() }
+        "react" => { "react".to_string() }
+        "v" => { "vue".to_string() }
+        "vue" => { "vue".to_string() }
+        _ => { "react".to_string() }
+    };
+    println!("{}", paint_user_input(&framework));
 
     // select a variant
     // javascript typescript ...
-    println!("select a variant: (default: ts)");
-    println!("typescript(ts)");
-    println!("javascript(js)");
-    let variant = read_line();
-    let variant = variant.to_lowercase();
+    // println!("select a variant: (default: ts)");
+    // println!("{} {}", paint_bold("select a variant:"), paint_white("(ts)"));
+    paint_remind("select a variant:", "(javascript)");
+    // println!("typescript(ts)");
+    // println!("javascript(js)");
+    println!("{}",paint_option("typescript"));
+    println!("{}",paint_option("javascript"));
+    let mut variant = read_line().to_lowercase();
+    variant = match variant.as_str() {
+        "ts" => { "typescript".to_string() }
+        "typescript" => { "typescript".to_string() }
+        "js" => { "javascript".to_string() }
+        "javascript" => { "javascript".to_string() }
+        _ => { "typescript".to_string() }
+    };
+    println!("{}", paint_user_input(&variant));
 
     let user_select = UserSelected::new(&project_name, &framework, &variant);
     // println!("{user_select:?}");
 
     user_select.init();
 
+    let git = ask_git_init();
     install(&user_select.project_name, &ask_install());
+    if git { git_init(project_name); }
 }

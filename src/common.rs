@@ -3,6 +3,7 @@ use std::env::current_exe;
 use std::io::Read;
 use std::path::Path;
 use std::process::Command;
+use ansi_term::{ANSIGenericString, Color, Style};
 
 // 复制文件夹到指定路径
 pub fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
@@ -37,7 +38,8 @@ pub fn read_line() -> String {
 
 // 询问是否install
 pub fn ask_install() -> String {
-    println!("Install dependencies? yes(default)/no");
+    // println!("Install dependencies? yes(default)/no");
+    println!("{} {}/no", paint_bold("Install dependencies?"), paint_white("yes"));
     let deps = read_line();
     let deps = match deps.to_lowercase().as_str() {
         "yes" => true,
@@ -50,7 +52,11 @@ pub fn ask_install() -> String {
     };
 
     if deps {
-        println!("which package manager would you like to use >> 1.pnpm(default)/2.npm/3.yarn");
+        println!("{}", paint_user_input("yes"));
+        // println!("which package manager would you like to use >> 1.pnpm(default)/2.npm/3.yarn",
+        println!("{} >> {}/2.npm/3.yarn",
+                 paint_bold("which package manager would you like to use"),
+                 paint_white("1.pnpm"));
         let mut npm_type = read_line();
         let npm_type = match npm_type.to_lowercase().as_str() {
             "1" => { "npm" }
@@ -64,8 +70,10 @@ pub fn ask_install() -> String {
             "y" => { "yarn" }
             _ => { "pnpm" }
         };
+        println!("{}", paint_user_input(npm_type));
         npm_type.to_string()
     } else {
+        println!("{}", paint_user_input("no"));
         "".to_string()
     }
 }
@@ -75,7 +83,7 @@ pub fn install(project_name: &str, npm_type: &str) {
     if npm_type.is_empty() {
         return;
     }
-    println!("start install ...");
+    println!("{}", paint_info("start install ..."));
 
     if cfg!(target_os = "windows") {
         // 获取当前目录
@@ -106,9 +114,11 @@ pub fn install(project_name: &str, npm_type: &str) {
         // .output().expect("cmd exec error!");
 
         println!("{}",
-                 "cd ".to_string() + &chdir + "\\" + project_name + " && " +
-                     // npm_type + " install --prefix " + &current_exe_pkg() + project_name
-                     &npm_type + " install"
+                 paint_info(&(
+                     "cd ".to_string() + &chdir + "\\" + project_name + " && " +
+                         // npm_type + " install --prefix " + &current_exe_pkg() + project_name
+                         &npm_type + " install"
+                 ))
         );
 
         let status = out.wait().expect("failed to wait for child");
@@ -123,7 +133,8 @@ pub fn install(project_name: &str, npm_type: &str) {
 }
 
 pub fn ask_git_init() -> bool {
-    println!("Initialize git repository? No(default)/Yes");
+    // println!("Initialize git repository? No(default)/Yes");
+    println!("{} {}/yes", paint_bold("Initialize git repository?"), paint_white("no"));
     let mut use_git_init = read_line();
     let mut use_git_init = use_git_init.to_lowercase();
     let use_git_init = match use_git_init.as_str() {
@@ -149,6 +160,9 @@ pub fn ask_git_init() -> bool {
             false
         }
     };
+    if use_git_init {
+        println!("{}", paint_user_input("yes"));
+    } else { println!("{}", paint_user_input("no")); }
     use_git_init
 }
 
@@ -159,7 +173,7 @@ pub fn cmd(cmd_shell: &str) -> Option<String> {
             .arg(cmd_shell)
             .output().expect("cmd exec error!");
 
-        println!("{}", cmd_shell);
+        // println!("{}", cmd_shell);
         Some(String::from_utf8_lossy(&out.stdout).to_string())
 
         // let status = out.wait().expect("cmd exec error!");
@@ -168,14 +182,14 @@ pub fn cmd(cmd_shell: &str) -> Option<String> {
         //     println!("done.");
         // }
     } else {
-        println!("暂不支持mac os");
+        println!("{}", Color::Yellow.paint("暂不支持mac os"));
         None
     }
 }
 
 // 执行git init操作
 pub fn git_init(project_name: &str) {
-    println!("start git init ...");
+    println!("{}", paint_info("start git init ..."));
 
     if cfg!(target_os = "windows") {
         let chdir = cmd("chdir").unwrap();
@@ -199,17 +213,17 @@ pub fn git_init(project_name: &str) {
         // .output().expect("cmd exec error!");
 
         println!("{}",
-                 "cd ".to_string() + &chdir + "\\" + project_name +
-                     " && " + "git init"
+                 paint_info(&("cd ".to_string() + &chdir + "\\" + project_name +
+                     " && " + "git init"))
         );
 
         let status = out.wait().expect("failed to wait for child");
 
         if status.success() {
-            println!("done.");
+            println!("{}", paint_success("done."));
         }
     } else {
-        println!("暂不支持mac os");
+        println!("{}", Color::Yellow.paint("暂不支持mac os"));
     }
 }
 
@@ -242,4 +256,41 @@ pub fn current_exe_pkg() -> String {
     // 获取当前目录的路径
     let current_exe = current_exe().unwrap();
     current_exe.display().to_string().replace(&pkg_name, "")
+}
+
+// ansi_term 美化控制台print
+
+pub fn paint_bold(str: &str) -> String {
+    Style::new().bold().paint(str).to_string()
+}
+
+pub fn paint_white(str: &str) -> String {
+    // 这个white颜色实际上类似gray灰色
+    Color::White.paint(str).to_string()
+}
+
+pub fn paint_info(str: &str) -> String {
+    Color::Blue.paint(str).to_string()
+    // Color::Cyan.paint(str).to_string()
+}
+
+pub fn paint_user_input(str: &str) -> String {
+    // Color::Green.paint(str.to_owned() + "\n").to_string()
+    Color::Green.paint(str).to_string()
+}
+
+pub fn paint_success(str: &str) -> String {
+    Color::Green.paint(str).to_string()
+}
+
+pub fn paint_option(str: &str) -> String {
+    Color::Purple.paint(str).to_string()
+}
+
+// 打印提示
+pub fn paint_remind_with_other(title: &str, default: &str, other: &str) {
+    println!("{} {}{other}", paint_bold(title), paint_white(default));
+}
+pub fn paint_remind(title: &str, default: &str) {
+    println!("{} {}", paint_bold(title), paint_white(default));
 }
