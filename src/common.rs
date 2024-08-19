@@ -137,32 +137,10 @@ pub fn ask_git_init() -> bool {
     println!("{} {}/yes", paint_bold("Initialize git repository?"), paint_white("no"));
     let mut use_git_init = read_line();
     let mut use_git_init = use_git_init.to_lowercase();
-    let use_git_init = match use_git_init.as_str() {
-        "yes" => {
-            true
-        }
-        "y" => {
-            true
-        }
-        "1" => {
-            true
-        }
-        "no" => {
-            false
-        }
-        "n" => {
-            false
-        }
-        "2" => {
-            false
-        }
-        _ => {
-            false
-        }
-    };
-    if use_git_init {
-        println!("{}", paint_user_input("yes"));
-    } else { println!("{}", paint_user_input("no")); }
+    let use_git_init = match_bool_default_no(use_git_init.as_str().clone());
+    // if use_git_init {
+    //     println!("{}", paint_user_input("yes"));
+    // } else { println!("{}", paint_user_input("no")); }
     use_git_init
 }
 
@@ -288,9 +266,76 @@ pub fn paint_option(str: &str) -> String {
 }
 
 // 打印提示
-pub fn paint_remind_with_other(title: &str, default: &str, other: &str) {
-    println!("{} {}{other}", paint_bold(title), paint_white(default));
+pub fn paint_remind_with_other(title: &str, before: &str, default: &str, after: &str) {
+    println!("{} {}{}{}", paint_bold(title), before, paint_white(default), after);
 }
 pub fn paint_remind(title: &str, default: &str) {
     println!("{} {}", paint_bold(title), paint_white(default));
+}
+
+// match
+pub fn match_bool(str: &str) -> bool {
+    match str {
+        "yes" => {
+            println!("{}", paint_user_input("yes"));
+            true
+        }
+        "y" => {
+            println!("{}", paint_user_input("yes"));
+            true
+        }
+        "1" => {
+            println!("{}", paint_user_input("yes"));
+            true
+        }
+        "no" => {
+            println!("{}", paint_user_input("no"));
+            false
+        }
+        "n" => {
+            println!("{}", paint_user_input("no"));
+            false
+        }
+        "2" => {
+            println!("{}", paint_user_input("no"));
+            false
+        }
+        _ => {
+            println!("{}", paint_user_input("yes"));
+            true
+        }
+    }
+}
+
+pub fn match_bool_default_no(str: &str) -> bool {
+    match str {
+        "yes" => {
+            println!("{}", paint_user_input("yes"));
+            true
+        }
+        "y" => {
+            println!("{}", paint_user_input("yes"));
+            true
+        }
+        "1" => {
+            println!("{}", paint_user_input("yes"));
+            true
+        }
+        "no" => {
+            println!("{}", paint_user_input("no"));
+            false
+        }
+        "n" => {
+            println!("{}", paint_user_input("no"));
+            false
+        }
+        "2" => {
+            println!("{}", paint_user_input("no"));
+            false
+        }
+        _ => {
+            println!("{}", paint_user_input("no"));
+            false
+        }
+    }
 }
