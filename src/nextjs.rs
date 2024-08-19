@@ -1,5 +1,5 @@
 use std::path::Path;
-use crate::common::{copy_dir_all, current_exe_pkg, install, read_line};
+use crate::common::{ask_install, copy_dir_all, current_exe_pkg, install, read_line};
 
 #[derive(Debug)]
 struct UserSelectedNextApp {
@@ -167,5 +167,5 @@ pub fn create_next_project() {
     // spawn(move ||
     // install(&user_select.project_name, &npm_type)
     // ).join().unwrap();
-    install(&user_select.project_name);
+    install(&user_select.project_name, &ask_install());
 }

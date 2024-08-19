@@ -130,6 +130,7 @@ done.
 - v1.2.0 支持创建git仓库(init)
 - v1.3.0 支持nuxt
 - v1.4.0 支持astro
+- v1.5.0 支持tauri-app
 
 # todo
 

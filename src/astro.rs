@@ -1,5 +1,5 @@
 use std::path::Path;
-use crate::common::{ask_git_init, copy_dir_all, current_exe_pkg, git_init, install, read_line};
+use crate::common::{ask_git_init, ask_install, copy_dir_all, current_exe_pkg, git_init, install, read_line};
 
 #[derive(Debug)]
 struct UserSelectedAstroApp {
@@ -128,22 +128,17 @@ pub fn create_astro_project() {
     }
 
     // deps
-    println!("deps: Install dependencies? yes(default)/no");
-    let deps = read_line();
-    let deps = match deps.to_lowercase().as_str() {
-        "yes" => true,
-        "no" => false,
-        _ => true
-    };
+    // println!("deps: Install dependencies? yes(default)/no");
+    // let deps = read_line();
+    // let deps = match deps.to_lowercase().as_str() {
+    //     "yes" => true,
+    //     "no" => false,
+    //     _ => true
+    // };
+    let npm_type = ask_install();
 
     // git
-    println!("git: Initialize a new git repository? (optional) yes(default)/no");
-    let git = read_line();
-    let git = match git.to_lowercase().as_str() {
-        "yes" => true,
-        "no" => false,
-        _ => true
-    };
+    let git = ask_git_init();
 
     let user_select = UserSelectedAstroApp::new(
         &project_name, tmpl, ts, if ts { Some(to_use) } else { None },
@@ -152,7 +147,7 @@ pub fn create_astro_project() {
 
     user_select.init();
 
-    if deps { install(&user_select.project_name); }
+    install(&user_select.project_name, &npm_type);
 
     if git { git_init(&user_select.project_name); }
 }

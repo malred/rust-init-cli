@@ -1,8 +1,8 @@
 use std::{fs, io, process};
 use std::env::current_exe;
+use std::io::Read;
 use std::path::Path;
 use std::process::Command;
-
 
 // 复制文件夹到指定路径
 pub fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
@@ -20,6 +20,8 @@ pub fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<
             fs::copy(entry.path(), dst.as_ref().join(entry.file_name()))?;
         }
     }
+
+    // println!("copy dir done.");
     Ok(())
 }
 
@@ -33,26 +35,61 @@ pub fn read_line() -> String {
     input.trim().to_string()
 }
 
-// 执行npm install操作
-pub fn install(project_name: &str) {
-    println!("which package manager would you like to use >> npm(default)/pnpm/yarn");
-    let mut npm_type = read_line();
-    if npm_type.is_empty() {
-        npm_type = "npm".to_string()
-    }
+// 询问是否install
+pub fn ask_install() -> String {
+    println!("Install dependencies? yes(default)/no");
+    let deps = read_line();
+    let deps = match deps.to_lowercase().as_str() {
+        "yes" => true,
+        "y" => true,
+        "1" => true,
+        "no" => false,
+        "n" => false,
+        "2" => false,
+        _ => true
+    };
 
+    if deps {
+        println!("which package manager would you like to use >> 1.pnpm(default)/2.npm/3.yarn");
+        let mut npm_type = read_line();
+        let npm_type = match npm_type.to_lowercase().as_str() {
+            "1" => { "npm" }
+            "npm" => { "npm" }
+            "n" => { "npm" }
+            "2" => { "pnpm" }
+            "pnpm" => { "pnpm" }
+            "p" => { "pnpm" }
+            "3" => { "yarn" }
+            "yarn" => { "yarn" }
+            "y" => { "yarn" }
+            _ => { "pnpm" }
+        };
+        npm_type.to_string()
+    } else {
+        "".to_string()
+    }
+}
+
+// 执行npm install操作
+pub fn install(project_name: &str, npm_type: &str) {
+    if npm_type.is_empty() {
+        return;
+    }
     println!("start install ...");
 
     if cfg!(target_os = "windows") {
         // 获取当前目录
-        let mut out = Command::new("cmd").arg("/c")
-            .arg(
-                "chdir"
-            )
-            .output().expect("cmd exec error!");
+        let chdir = cmd("chdir").unwrap();
+        let chdir = chdir.replace("\r\n", "");
 
-        let strs = String::from_utf8_lossy(&out.stdout);
-        let chdir = strs.replace("\r\n", "");
+        // let mut out = Command::new("cmd").arg("/c")
+        //     .arg(
+        //         "chdir"
+        //     )
+        //     .output().expect("cmd exec error!");
+        //
+        // let strs = String::from_utf8_lossy(&out.stdout);
+        // let chdir = strs.replace("\r\n", "");
         // println!("chdir {:?}", chdir.clone() + "\\" + project_name);
         // println!("chdir os {:?}", " G:\\code-g\\rust-vite-cli\\my-app");
 
@@ -93,7 +130,19 @@ pub fn ask_git_init() -> bool {
         "yes" => {
             true
         }
+        "y" => {
+            true
+        }
+        "1" => {
+            true
+        }
         "no" => {
+            false
+        }
+        "n" => {
+            false
+        }
+        "2" => {
             false
         }
         _ => {
@@ -103,19 +152,43 @@ pub fn ask_git_init() -> bool {
     use_git_init
 }
 
+// 执行命令行操作
+pub fn cmd(cmd_shell: &str) -> Option<String> {
+    if cfg!(target_os = "windows") {
+        let mut out = Command::new("cmd").arg("/c")
+            .arg(cmd_shell)
+            .output().expect("cmd exec error!");
+
+        println!("{}", cmd_shell);
+        Some(String::from_utf8_lossy(&out.stdout).to_string())
+
+        // let status = out.wait().expect("cmd exec error!");
+        //
+        // if status.success() {
+        //     println!("done.");
+        // }
+    } else {
+        println!("暂不支持mac os");
+        None
+    }
+}
+
 // 执行git init操作
 pub fn git_init(project_name: &str) {
     println!("start git init ...");
 
     if cfg!(target_os = "windows") {
-        let mut out = Command::new("cmd").arg("/c")
-            .arg(
-                "chdir"
-            )
-            .output().expect("cmd exec error!");
+        let chdir = cmd("chdir").unwrap();
+        let chdir = chdir.replace("\r\n", "");
 
-        let strs = String::from_utf8_lossy(&out.stdout);
-        let chdir = strs.replace("\r\n", "");
+        // let mut out = Command::new("cmd").arg("/c")
+        //     .arg(
+        //         "chdir"
+        //     )
+        //     .output().expect("cmd exec error!");
+        //
+        // let strs = String::from_utf8_lossy(&out.stdout);
+        // let chdir = strs.replace("\r\n", "");
 
         let mut out = Command::new("cmd").arg("/c")
             .arg(

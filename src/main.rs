@@ -4,12 +4,14 @@ mod nextjs;
 mod nest;
 mod nuxt;
 mod astro;
+mod tauri;
 
 use clap::{Parser, Subcommand};
 use crate::astro::create_astro_project;
 use crate::nest::create_nest_project;
 use crate::nextjs::create_next_project;
 use crate::nuxt::create_nuxt_project;
+use crate::tauri::create_tauri_project;
 use crate::vite::create_vite_project;
 
 #[derive(Parser)]
@@ -32,6 +34,8 @@ enum Commands {
     CreateNuxt,
     /// create-astro
     CreateAstro,
+    /// create-tauri
+    CreateTauri,
 }
 
 fn main() {
@@ -52,6 +56,9 @@ fn main() {
         }
         Some(Commands::CreateAstro) => {
             create_astro_project()
+        }
+        Some(Commands::CreateTauri) => {
+            create_tauri_project()
         }
         None => {
             println!("Run with --help to see instructions.")
