@@ -41,7 +41,6 @@ pub fn create_nest_project() {
     if project_name.is_empty() {
         println!("{}", paint_user_input("project-name"))
     } else { println!("{}", paint_user_input(&project_name)); }
-    let project_name = read_line();
 
     let user_select = UserSelectedNestApp::new(
         &project_name
