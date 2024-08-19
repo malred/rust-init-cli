@@ -10,4 +10,5 @@ edition = "2021"
 [dependencies]
 ansi_term = "0.12.1"
 clap = { version = "4.5.16", features = ["derive"] }
-owo-colors = "4.0.0"
+#color-print = "0.3.6"
+#owo-colors = "4.0.0"
