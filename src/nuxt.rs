@@ -1,5 +1,5 @@
 use std::path::Path;
-use crate::common::{ask_git_init, ask_install, copy_dir_all, current_exe_pkg, git_init, install, read_line};
+use crate::common::{ask_git_init, ask_install, copy_dir_all, current_exe_pkg, git_init, install, paint_remind, paint_user_input, read_line};
 
 #[derive(Debug)]
 struct UserSelectedNuxtApp {
@@ -35,8 +35,12 @@ impl UserSelectedNuxtApp {
 
 pub fn create_nuxt_project() {
     // project name
-    println!("What is your project named? >> nuxt-app");
+    // println!("What is your project named? >> nuxt-app");
+    paint_remind("What is your project named? >>", "nuxt-app");
     let project_name = read_line();
+    if project_name.is_empty() {
+        println!("{}", paint_user_input("nuxt-app"))
+    } else { println!("{}", paint_user_input(&project_name)); }
 
     let user_select = UserSelectedNuxtApp::new(
         &project_name
