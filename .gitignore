@@ -1,1 +1,7 @@
 /target
+/tauri-app/**/*
+/tauri-app/
+/project-name
+/project-name/**/*
+/vite-project
+/vite-project/**/*

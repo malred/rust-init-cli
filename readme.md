@@ -131,6 +131,7 @@ done.
 - v1.3.0 支持nuxt
 - v1.4.0 支持astro
 - v1.5.0 支持tauri-app
+  - 修改install方法, 分离询问安装和执行安装的逻辑
 
 # todo
 

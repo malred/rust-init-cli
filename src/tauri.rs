@@ -198,7 +198,7 @@ pub fn create_tauri_project() {
     let user_select = UserSelectedTauriApp::new(
         &project_name, language, template, ts,
     );
-    println!("{user_select:?}");
+    // println!("{user_select:?}");
 
     user_select.init();
 
