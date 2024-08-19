@@ -4,6 +4,7 @@ use std::io::Read;
 use std::path::Path;
 use std::process::Command;
 use ansi_term::{ANSIGenericString, Color, Style};
+use colored::{ColoredString, Colorize};
 
 // 复制文件夹到指定路径
 pub fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
@@ -240,6 +241,7 @@ pub fn current_exe_pkg() -> String {
 
 pub fn paint_bold(str: &str) -> String {
     Style::new().bold().paint(str).to_string()
+    // str.bold().to_string()
 }
 
 pub fn paint_white(str: &str) -> String {
@@ -270,8 +272,14 @@ pub fn paint_option(str: &str) -> String {
     Color::Purple.underline().paint(str).to_string()
 }
 
-pub fn paint_underline_white(str: &str) -> String {
-    Color::White.underline().paint(str).to_string()
+// pub fn paint_underline_white(str: &str) -> String {
+// Color::White.underline().paint(str).to_string()
+// pub fn paint_underline_white(str: &str) -> ANSIGenericString<str> {
+//     Color::White.underline().paint(str)
+// }
+
+pub fn paint_underline_white(str: &str) -> ColoredString {
+    str.underline().white()
 }
 
 // 打印提示
