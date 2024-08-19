@@ -1,5 +1,7 @@
 use std::path::Path;
-use crate::common::{ask_git_init, ask_install, copy_dir_all, current_exe_pkg, git_init, install, read_line};
+use ansi_term::Color::{Green, Purple, White};
+use ansi_term::{Color, Style};
+use crate::common::{ask_git_init, ask_install, copy_dir_all, current_exe_pkg, git_init, install, match_bool, paint_bold, paint_option, paint_remind, paint_remind_with_other, paint_success, paint_underline_white, paint_user_input, paint_warning, read_line};
 
 #[derive(Debug)]
 struct UserSelectedAstroApp {
@@ -82,48 +84,83 @@ enum Mode {
 
 pub fn create_astro_project() {
     // project name (astro 使用的是随机名称生成)
-    println!("dir: Where should we create your new project? (project-name)");
+    // println!("dir: Where should we create your new project? (project-name)");
+    print!(" {} ", Style::new().on(Color::Purple).paint(" dir "));
+    paint_remind("Where should we create your new project? >>", "project-name");
     let project_name = read_line();
+    if project_name.is_empty() {
+        println!("{}", paint_user_input("project-name"))
+    } else { println!("{}", paint_user_input(&project_name)); }
 
     // template
-    println!("tmpl: How would you like to start your new project? (input 1,2,3 to select)");
-    println!("\t1. Include sample files (recommended & default)");
-    println!("\t2. Use blog template");
-    println!("\t3. Empty");
-    let tmpl = read_line();
+    // print!("{}", Style::new().on(Color::Purple).fg(White).paint(" dir "));
+    print!(" {} ", Style::new().on(Color::Purple).paint(" tmpl "));
+    // println!("How would you like to start your new project? (input 1,2,3 to select)");
+    println!("{}", paint_bold("How would you like to start your new project?"));
+    println!("\t1. {}", paint_underline_white("Include sample files (recommended)"));
+    println!("\t2. {}", paint_option("Use blog template"));
+    println!("\t3. {}", paint_option("Empty"));
+    let tmpl = read_line().to_lowercase();
     let tmpl = match tmpl.to_lowercase().as_str() {
-        "1" => Template::Sample,
-        "2" => Template::Blog,
-        "3" => Template::Empty,
-        _ => Template::Sample
+        "1" => {
+            println!("{}", paint_user_input("Include sample files (recommended)"));
+            Template::Sample
+        }
+        "2" => {
+            println!("{}", paint_user_input("Use blog template"));
+            Template::Blog
+        }
+        "3" => {
+            println!("{}", paint_user_input("Empty"));
+            Template::Empty
+        }
+        _ => {
+            println!("{}", paint_user_input("Include sample files (recommended)"));
+            Template::Sample
+        }
     };
 
     // ts
-    println!("ts: Do you plan to write TypeScript? yes(default)/no");
-    let ts = read_line();
-    let ts = match ts.to_lowercase().as_str() {
-        "yes" => true,
-        "no" => false,
-        _ => true
-    };
+    // println!("ts: Do you plan to write TypeScript? yes(default)/no");
+    print!(" {} ", Style::new().on(Color::Purple).paint(" ts "));
+    paint_remind_with_other(
+        "Do you plan to write TypeScript?", "", "yes", "/no",
+    );
+    let ts = read_line().to_lowercase();
+    let ts = match_bool(ts.as_str().clone());
     if !ts {
-        println!("◼ No worries! TypeScript is supported in Astro by default,
-         but you are free to continue writing JavaScript instead.");
+        println!("{}", paint_warning(
+            "◼ No worries! TypeScript is supported in Astro by default, but you are free to continue writing JavaScript instead.")
+        );
     }
 
     // use
     let mut to_use: Mode = Mode::Strict;
     if ts {
-        println!("use: How strict should TypeScript be? input 1,2,3 to select");
-        println!("\t1.Strict (recommended & default)");
-        println!("\t2.Strictest");
-        println!("\t3.Relaxed");
-        let mode = read_line();
+        // println!("use: How strict should TypeScript be? input 1,2,3 to select");
+        paint_remind("use: How strict should TypeScript be?", "");
+        // println!("\t1. Strict (recommended & default)");
+        println!("\t1. {}", paint_underline_white("Strict (recommended)"));
+        println!("\t2. {}", paint_option("Strictest"));
+        println!("\t3. {}", paint_option("Relaxed"));
+        let mode = read_line().to_lowercase();
         to_use = match mode.to_lowercase().as_str() {
-            "1" => Mode::Strict,
-            "2" => Mode::Strictest,
-            "3" => Mode::Relaxed,
-            _ => Mode::Strict
+            "1" => {
+                println!("{}", paint_user_input("Strict (recommended)"));
+                Mode::Strict
+            }
+            "2" => {
+                println!("{}", paint_user_input("Strictest"));
+                Mode::Strictest
+            }
+            "3" => {
+                println!("{}", paint_user_input("Relaxed"));
+                Mode::Relaxed
+            }
+            _ => {
+                println!("{}", paint_user_input("Strict (recommended)"));
+                Mode::Strict
+            }
         }
     }
 

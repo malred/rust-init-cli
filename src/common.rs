@@ -261,16 +261,27 @@ pub fn paint_success(str: &str) -> String {
     Color::Green.paint(str).to_string()
 }
 
+pub fn paint_warning(str: &str) -> String {
+    Color::Yellow.paint(str).to_string()
+}
+
 pub fn paint_option(str: &str) -> String {
-    Color::Purple.paint(str).to_string()
+    // Color::Purple.paint(str).to_string()
+    Color::Purple.underline().paint(str).to_string()
+}
+
+pub fn paint_underline_white(str: &str) -> String {
+    Color::White.underline().paint(str).to_string()
 }
 
 // 打印提示
 pub fn paint_remind_with_other(title: &str, before: &str, default: &str, after: &str) {
-    println!("{} {}{}{}", paint_bold(title), before, paint_white(default), after);
+    // println!("{} {}{}{}", paint_bold(title), before, paint_white(default), after);
+    println!("{} {}{}{}", paint_bold(title), before, paint_underline_white(default), after);
 }
+
 pub fn paint_remind(title: &str, default: &str) {
-    println!("{} {}", paint_bold(title), paint_white(default));
+    println!("{} {}", paint_bold(title), paint_underline_white(default));
 }
 
 // match
